@@ -8,15 +8,31 @@
 	http://www.springframework.org/schema/beans 
 	http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <http auto-config="true">
-        <intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+    <http use-expressions="true">        
+        <intercept-url pattern="/user" access="isAuthenticated()" />
+        <intercept-url pattern="/admin" access="isAuthenticated()" />
+
+
+        <form-login login-page='/' 
+                    default-target-url="/user"
+                    authentication-failure-url="/login?error=true" 
+                    username-parameter="user_login"
+                    password-parameter="password_login" />
+
+        <!-- переход на главную страницу (форму аутентификации) при выходе из системы -->
+        <logout logout-success-url="/login" />
+
+        <!-- выключаем защиту от CSRF атак (чтобы не отвлекаться на ее настройку) -->
+        <csrf disabled="true"/>
     </http>
+    
+    
 
     <authentication-manager>
         <authentication-provider>
             <user-service>
                 <user name="admin" password="apass" authorities="ROLE_ADMIN, ROLE_USER" />
-                <user name="user" password="upass" authorities="ROLE_USER" />
+                <user name="user" password="user" authorities="ROLE_USER" />
             </user-service>
         </authentication-provider>
     </authentication-manager>
