@@ -1,6 +1,13 @@
 package ru.alexander.springsecurity;
 
 import java.security.Principal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -9,9 +16,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class HomeController {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
+    
+    @Autowired
+    AccessDecisionManager accessDecisionManager;
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public String userPage() {
+        printUserDetails();
         return "/content/user";
     }
 
@@ -35,9 +48,21 @@ public class HomeController {
         ModelAndView modelAndView = new ModelAndView();
         if (user != null) {
             modelAndView.addObject("errorMsg", "Уважаемый " + user.getName() +  ", у Вас нет доступа к запрашиваемой странице!");
+        }else{
+            modelAndView.addObject("Нет доступа к запрашиваемой странице!");
         }
         modelAndView.setViewName("/content/accessDenied");
         return modelAndView;
+    }
+
+    private void printUserDetails() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        LOGGER.info("user=" + userDetails.getUsername());
+        LOGGER.info("password=" + userDetails.getPassword());
+        LOGGER.info("Права:");
+        for (GrantedAuthority authority : userDetails.getAuthorities()) {
+            LOGGER.info(authority.getAuthority());
+        }
     }
 
 }
