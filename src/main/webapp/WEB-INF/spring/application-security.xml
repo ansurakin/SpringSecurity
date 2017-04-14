@@ -9,9 +9,10 @@
 	http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <http use-expressions="true">        
-        <intercept-url pattern="/user" access="isAuthenticated()" />
-        <intercept-url pattern="/admin" access="isAuthenticated()" />
+        <intercept-url pattern="/user" access="hasRole('ROLE_USER')" />
+        <intercept-url pattern="/admin" access="hasRole('ROLE_ADMIN')" />
 
+        <access-denied-handler error-page="/accessDenied" />
 
         <form-login login-page='/' 
                     default-target-url="/user"
@@ -31,7 +32,7 @@
     <authentication-manager>
         <authentication-provider>
             <user-service>
-                <user name="admin" password="apass" authorities="ROLE_ADMIN, ROLE_USER" />
+                <user name="admin" password="admin" authorities="ROLE_ADMIN" />
                 <user name="user" password="user" authorities="ROLE_USER" />
             </user-service>
         </authentication-provider>

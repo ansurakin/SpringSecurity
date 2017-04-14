@@ -14,7 +14,7 @@
     </head>
     <body>
 
-        <form method="POST" action="login" class="box login">
+        <form method="POST" action="<%=request.getContextPath()%>/login" class="box login">
             <fieldset class="boxBody">
                 <label> Username </label> <input type='text' name='user_login' value=''>
                 <label> Password </label> <input type='password' name='password_login' />
