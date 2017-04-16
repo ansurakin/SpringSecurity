@@ -8,7 +8,7 @@
 	http://www.springframework.org/schema/beans 
 	http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <http use-expressions="true">        
+    <http auto-config="true">        
         <intercept-url pattern="/user" access="hasRole('ROLE_USER')" />
         <intercept-url pattern="/admin" access="hasRole('ROLE_ADMIN')" />
 
@@ -30,16 +30,20 @@
         <csrf disabled="true"/>
     </http>
     
-    
+    <beans:bean id="jdbcGroupsImpl" class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+        <beans:property name="enableGroups" value="true" />
+        <beans:property name="enableAuthorities" value="false" />
+        <beans:property name="dataSource" ref="dataSource" />
+    </beans:bean>   
 
     <authentication-manager>
-        <authentication-provider>
-<!--            <user-service>
+        <authentication-provider user-service-ref="jdbcGroupsImpl">
+            <!--            <user-service>
                 <user name="admin" password="admin" authorities="ROLE_ADMIN" />
                 <user name="user" password="user" authorities="ROLE_USER" />
             </user-service>-->
             
-            <jdbc-user-service data-source-ref="dataSource" />
+            <!--<jdbc-user-service data-source-ref="dataSource" />-->
             
         </authentication-provider>
     </authentication-manager>
