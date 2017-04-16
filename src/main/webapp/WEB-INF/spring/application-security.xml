@@ -38,6 +38,7 @@
 
     <authentication-manager>
         <authentication-provider user-service-ref="jdbcGroupsImpl">
+            <password-encoder ref="bcrypt" />
             <!--            <user-service>
                 <user name="admin" password="admin" authorities="ROLE_ADMIN" />
                 <user name="user" password="user" authorities="ROLE_USER" />
@@ -48,5 +49,9 @@
         </authentication-provider>
     </authentication-manager>
 
+    <!--Хэширование паролей-->
+    <beans:bean id="bcrypt" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <beans:constructor-arg name="strength" value="11" />
+    </beans:bean>   
 
 </beans:beans>
