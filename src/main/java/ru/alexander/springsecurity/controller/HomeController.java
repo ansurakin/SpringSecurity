@@ -1,4 +1,4 @@
-package ru.alexander.springsecurity;
+package ru.alexander.springsecurity.controller;
 
 import java.security.Principal;
 import org.slf4j.Logger;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import ru.alexander.springsecurity.service.ProccessService;
 
 @Controller
 public class HomeController {
@@ -20,10 +21,15 @@ public class HomeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
     
     @Autowired
-    AccessDecisionManager accessDecisionManager;
+    private AccessDecisionManager accessDecisionManager;
+    
+    @Autowired
+    private ProccessService proccessService;
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public String userPage() {
+//        Вызо защищённого метода
+//        this.proccessService.getMessage();
         printUserDetails();
         return "/content/user";
     }
